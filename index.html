@@ -1,140 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMNI AI Story Creator</title>
-    <style>
-        /* Modern Premium Dark Theme */
-        :root { --primary: #00f2fe; --secondary: #4facfe; --bg-color: #0b0f19; --card-bg: rgba(20, 25, 40, 0.8); }
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
-        body { background-color: var(--bg-color); background-image: radial-gradient(circle at top right, #1a233a, #0b0f19); color: #ffffff; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .container { background: var(--card-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); width: 100%; max-width: 650px; padding: 40px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.2rem; margin-bottom: 5px; }
-        .header p { font-size: 0.9rem; color: #8892b0; letter-spacing: 0.5px; }
-        textarea { width: 100%; height: 120px; padding: 15px; background-color: rgba(0, 0, 0, 0.3); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; resize: none; font-size: 16px; margin-bottom: 20px; }
-        textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); }
-        button { width: 100%; background: linear-gradient(135deg, var(--secondary), var(--primary)); color: #fff; border: none; padding: 15px; font-size: 18px; border-radius: 10px; cursor: pointer; font-weight: bold; }
-        button:hover { opacity: 0.9; }
-        #loadingStatus { display: none; text-align: center; margin-top: 20px; color: var(--primary); font-weight: 500; }
-        .output-section { display: none; margin-top: 30px; }
-        .result-box { background-color: rgba(0, 0, 0, 0.4); padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid var(--primary); }
-        .result-box h3 { color: var(--primary); margin-bottom: 10px; font-size: 1.1rem; }
-        img { width: 100%; border-radius: 8px; margin-top: 10px; }
-        audio { width: 100%; margin-top: 10px; border-radius: 20px; outline: none;}
-        .error-message { color: #ff4d4d; text-align: center; margin-top: 15px; display: none; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMNI AI Story Creator - Fixed</title>
+  <style>
+    :root { --primary: #00f2fe; --secondary: #4facfe; --bg-color: #0b0f19; --card-bg: rgba(20, 25, 40, 0.8); }
+    * { box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { background: #0b0f19; color: white; display: flex; justify-content: center; padding: 20px; }
+    .container { max-width: 700px; width: 100%; background: rgba(20,25,40,0.85); padding: 30px; border-radius: 16px; }
+    textarea, button { width: 100%; border-radius: 10px; }
+    textarea { height: 120px; padding: 15px; margin-bottom: 15px; background: #111827; color: white; border: 1px solid #334155; }
+    button { padding: 14px; border: none; background: linear-gradient(135deg, var(--secondary), var(--primary)); color: white; font-size: 18px; font-weight: bold; cursor: pointer; }
+    .output-section { margin-top: 20px; display: none; }
+    .result-box { background: rgba(0,0,0,0.35); padding: 16px; border-radius: 10px; margin-bottom: 15px; }
+    img, video, audio { width: 100%; margin-top: 10px; border-radius: 8px; }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h1>OMNI AI Engine</h1>
+    <p>Working Offline Version ✅</p>
 
-    <div class="container">
-        <div class="header">
-            <h1>OMNI AI Engine</h1>
-            <p>Project by JAAT | Narayana E Techno School, Ajmer</p>
-        </div>
+    <textarea id="promptInput" placeholder="Enter your story idea..."></textarea>
+    <button onclick="generateRealMagic()">Generate Story & Media</button>
 
-        <textarea id="promptInput" placeholder="Apni story ka idea yahan enter karein..."></textarea>
-        
-        <button id="generateBtn" onclick="generateRealMagic()">Generate Story & Media</button>
-
-        <div id="loadingStatus">AI Processing... Yeh 15-20 seconds le sakta hai. Please wait.</div>
-        <div id="errorMessage" class="error-message"></div>
-
-        <div class="output-section" id="outputArea">
-            <div class="result-box">
-                <h3>📖 AI Story</h3>
-                <div class="story-text" id="storyOutput"></div>
-            </div>
-            <div class="result-box">
-                <h3>🎨 AI Illustration</h3>
-                <img id="imageOutput" src="" alt="AI Generated Graphic">
-            </div>
-            <div class="result-box">
-                <h3>🎧 AI Voice Narration</h3>
-                <audio id="audioOutput" controls></audio>
-            </div>
-        </div>
+    <div class="output-section" id="outputArea">
+      <div class="result-box">
+        <h3>📖 Story</h3>
+        <div id="storyOutput"></div>
+      </div>
+      <div class="result-box">
+        <h3>🎨 Illustration</h3>
+        <img id="imageOutput" src="" alt="Story Image">
+      </div>
+      <div class="result-box">
+        <h3>🎧 Voice</h3>
+        <audio id="audioOutput" controls></audio>
+      </div>
+      <div class="result-box">
+        <h3>🎬 Scene Video</h3>
+        <video id="videoOutput" controls autoplay muted loop>
+          <source id="videoSource" src="videos/default.mp4" type="video/mp4">
+        </video>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // 🚨 NAYI API KEY GENERATE KARKE YAHAN DAALEIN 🚨
-        const OPENAI_API_KEY = "sk-proj-YOUR_NEW_API_KEY_HERE"; 
+  <script>
+    function generateRealMagic() {
+      const prompt = document.getElementById('promptInput').value.trim();
+      if (!prompt) {
+        alert('Please enter a prompt first!');
+        return;
+      }
 
-        async function generateRealMagic() {
-            const prompt = document.getElementById("promptInput").value;
-            const btn = document.getElementById("generateBtn");
-            const loading = document.getElementById("loadingStatus");
-            const outputArea = document.getElementById("outputArea");
-            const errorMsg = document.getElementById("errorMessage");
+      const storyText = `Once upon a time, ${prompt}, and it became an exciting magical adventure full of mystery and action.`;
+      document.getElementById('storyOutput').innerText = storyText;
 
-            if (!prompt) {
-                alert("Please enter a prompt first!");
-                return;
-            }
+      const img = document.getElementById('imageOutput');
+      const videoSource = document.getElementById('videoSource');
+      const video = document.getElementById('videoOutput');
+      const lower = prompt.toLowerCase();
 
-            btn.disabled = true;
-            loading.style.display = "block";
-            outputArea.style.display = "none";
-            errorMsg.style.display = "none";
+      if (lower.includes('jungle') || lower.includes('forest')) {
+        img.src = 'images/jungle.jpg';
+        videoSource.src = 'videos/jungle.mp4';
+      } else if (lower.includes('space') || lower.includes('moon')) {
+        img.src = 'images/space.jpg';
+        videoSource.src = 'videos/space.mp4';
+      } else if (lower.includes('ocean') || lower.includes('sea')) {
+        img.src = 'images/ocean.jpg';
+        videoSource.src = 'videos/ocean.mp4';
+      } else {
+        img.src = 'images/default.jpg';
+        videoSource.src = 'videos/default.mp4';
+      }
 
-            try {
-                // 1. GENERATE STORY (Using a FREE open AI without API Key)
-                const textResponse = await fetch(`https://text.pollinations.ai/prompt/Write a short, engaging 3-sentence story about: ${encodeURIComponent(prompt)}`);
-                const storyText = await textResponse.text();
-                document.getElementById("storyOutput").innerText = storyText;
+      video.load();
 
-                // 2. GENERATE IMAGE (Using OpenAI DALL-E 3)
-                const imageRes = await fetch("https://api.openai.com/v1/images/generations", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${OPENAI_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        model: "dall-e-3",
-                        prompt: "A beautiful illustration of: " + prompt,
-                        n: 1,
-                        size: "1024x1024"
-                    })
-                });
-                const imageData = await imageRes.json();
-                if(imageData.error) throw new Error(imageData.error.message);
-                document.getElementById("imageOutput").src = imageData.data[0].url;
+      const voice = new SpeechSynthesisUtterance(storyText);
+      speechSynthesis.cancel();
+      speechSynthesis.speak(voice);
 
-                // 3. GENERATE AUDIO (Using OpenAI TTS)
-                const audioRes = await fetch("https://api.openai.com/v1/audio/speech", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${OPENAI_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        model: "tts-1",
-                        voice: "onyx", // Male voice. Options: alloy, echo, fable, onyx, nova, shimmer
-                        input: storyText
-                    })
-                });
-                
-                if(!audioRes.ok) throw new Error("Audio generation failed");
-                
-                // Convert audio response to playable blob URL
-                const audioBlob = await audioRes.blob();
-                const audioUrl = URL.createObjectURL(audioBlob);
-                document.getElementById("audioOutput").src = audioUrl;
-
-                // Show all outputs
-                outputArea.style.display = "block";
-
-            } catch (error) {
-                console.error(error);
-                errorMsg.innerText = "Error: " + error.message;
-                errorMsg.style.display = "block";
-            } finally {
-                btn.disabled = false;
-                loading.style.display = "none";
-            }
-        }
-    </script>
+      document.getElementById('outputArea').style.display = 'block';
+    }
+  </script>
 </body>
 </html>
