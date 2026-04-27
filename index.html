@@ -3,155 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Story Generator by JAAT</title>
+    <title>OMNI AI Story Creator</title>
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-        .container {
-            background-color: #1e1e1e;
-            width: 100%;
-            max-width: 600px;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
-            text-align: center;
-        }
-        h1 {
-            color: #00d2ff;
-            margin-bottom: 5px;
-        }
-        .header-credentials {
-            font-size: 0.85em;
-            color: #888;
-            margin-bottom: 25px;
-            font-weight: bold;
-        }
-        textarea {
-            width: 100%;
-            height: 100px;
-            padding: 15px;
-            background-color: #2a2a2a;
-            color: #fff;
-            border: 1px solid #444;
-            border-radius: 8px;
-            resize: none;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        textarea:focus {
-            outline: none;
-            border-color: #00d2ff;
-        }
-        button {
-            background: linear-gradient(135deg, #00d2ff, #007bff);
-            color: #fff;
-            border: none;
-            padding: 12px 25px;
-            font-size: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        button:hover {
-            opacity: 0.8;
-        }
-        #loading {
-            display: none;
-            margin-top: 20px;
-            color: #00d2ff;
-            font-style: italic;
-        }
-        .output-section {
-            display: none;
-            margin-top: 30px;
-            text-align: left;
-            background-color: #2a2a2a;
-            padding: 20px;
-            border-radius: 8px;
-        }
-        .output-section h3 {
-            margin-top: 0;
-            color: #00d2ff;
-            font-size: 1.1em;
-            margin-bottom: 10px;
-        }
-        .story-text {
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        img {
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        audio {
-            width: 100%;
-        }
+        /* Modern Premium Dark Theme */
+        :root { --primary: #00f2fe; --secondary: #4facfe; --bg-color: #0b0f19; --card-bg: rgba(20, 25, 40, 0.8); }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background-color: var(--bg-color); background-image: radial-gradient(circle at top right, #1a233a, #0b0f19); color: #ffffff; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { background: var(--card-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); width: 100%; max-width: 650px; padding: 40px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.2rem; margin-bottom: 5px; }
+        .header p { font-size: 0.9rem; color: #8892b0; letter-spacing: 0.5px; }
+        textarea { width: 100%; height: 120px; padding: 15px; background-color: rgba(0, 0, 0, 0.3); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; resize: none; font-size: 16px; margin-bottom: 20px; }
+        textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); }
+        button { width: 100%; background: linear-gradient(135deg, var(--secondary), var(--primary)); color: #fff; border: none; padding: 15px; font-size: 18px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        button:hover { opacity: 0.9; }
+        #loadingStatus { display: none; text-align: center; margin-top: 20px; color: var(--primary); font-weight: 500; }
+        .output-section { display: none; margin-top: 30px; }
+        .result-box { background-color: rgba(0, 0, 0, 0.4); padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid var(--primary); }
+        .result-box h3 { color: var(--primary); margin-bottom: 10px; font-size: 1.1rem; }
+        img { width: 100%; border-radius: 8px; margin-top: 10px; }
+        audio { width: 100%; margin-top: 10px; border-radius: 20px; outline: none;}
+        .error-message { color: #ff4d4d; text-align: center; margin-top: 15px; display: none; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>AI Story Creator</h1>
-        <div class="header-credentials">Project by JAAT | Narayana E Techno School, Ajmer</div>
+        <div class="header">
+            <h1>OMNI AI Engine</h1>
+            <p>Project by JAAT | Narayana E Techno School, Ajmer</p>
+        </div>
 
-        <textarea id="promptInput" placeholder="Apni story ka idea yahan likhiye... (Example: Ek time-traveling robot jo dinosaur era mein chala gaya)"></textarea>
+        <textarea id="promptInput" placeholder="Apni story ka idea yahan enter karein..."></textarea>
         
-        <button onclick="simulateGeneration()">Generate Magic</button>
+        <button id="generateBtn" onclick="generateRealMagic()">Generate Story & Media</button>
 
-        <div id="loading">Generating your story, illustration, and audio... Please wait.</div>
+        <div id="loadingStatus">AI Processing... Yeh 15-20 seconds le sakta hai. Please wait.</div>
+        <div id="errorMessage" class="error-message"></div>
 
         <div class="output-section" id="outputArea">
-            <h3>📖 The Story:</h3>
-            <div class="story-text" id="storyOutput"></div>
-
-            <h3>🎨 Illustration:</h3>
-            <img id="imageOutput" src="" alt="Story Illustration">
-
-            <h3>🎧 Narration:</h3>
-            <audio id="audioOutput" controls></audio>
+            <div class="result-box">
+                <h3>📖 AI Story</h3>
+                <div class="story-text" id="storyOutput"></div>
+            </div>
+            <div class="result-box">
+                <h3>🎨 AI Illustration</h3>
+                <img id="imageOutput" src="" alt="AI Generated Graphic">
+            </div>
+            <div class="result-box">
+                <h3>🎧 AI Voice Narration</h3>
+                <audio id="audioOutput" controls></audio>
+            </div>
         </div>
     </div>
 
     <script>
-        function simulateGeneration() {
+        // 🚨 NAYI API KEY GENERATE KARKE YAHAN DAALEIN 🚨
+        const OPENAI_API_KEY = "sk-proj-YOUR_NEW_API_KEY_HERE"; 
+
+        async function generateRealMagic() {
             const prompt = document.getElementById("promptInput").value;
-            
-            if (prompt.trim() === "") {
-                alert("Bhai, pehle text box mein koi prompt toh daalo!");
+            const btn = document.getElementById("generateBtn");
+            const loading = document.getElementById("loadingStatus");
+            const outputArea = document.getElementById("outputArea");
+            const errorMsg = document.getElementById("errorMessage");
+
+            if (!prompt) {
+                alert("Please enter a prompt first!");
                 return;
             }
 
-            // UI changes: Show loading, hide previous output
-            document.getElementById("loading").style.display = "block";
-            document.getElementById("outputArea").style.display = "none";
+            btn.disabled = true;
+            loading.style.display = "block";
+            outputArea.style.display = "none";
+            errorMsg.style.display = "none";
 
-            // Jab aap asali API lagayenge, toh yeh setTimeout remove karke API call yahan likhenge
-            setTimeout(() => {
-                // UI changes: Hide loading, show output
-                document.getElementById("loading").style.display = "none";
-                document.getElementById("outputArea").style.display = "block";
+            try {
+                // 1. GENERATE STORY (Using a FREE open AI without API Key)
+                const textResponse = await fetch(`https://text.pollinations.ai/prompt/Write a short, engaging 3-sentence story about: ${encodeURIComponent(prompt)}`);
+                const storyText = await textResponse.text();
+                document.getElementById("storyOutput").innerText = storyText;
 
-                // Dummy data fill kar rahe hain frontend check karne ke liye
-                document.getElementById("storyOutput").innerText = "Yeh aapki story ka text hai based on: '" + prompt + "'. Future mein yahan AI generated kahani aayegi.";
+                // 2. GENERATE IMAGE (Using OpenAI DALL-E 3)
+                const imageRes = await fetch("https://api.openai.com/v1/images/generations", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "dall-e-3",
+                        prompt: "A beautiful illustration of: " + prompt,
+                        n: 1,
+                        size: "1024x1024"
+                    })
+                });
+                const imageData = await imageRes.json();
+                if(imageData.error) throw new Error(imageData.error.message);
+                document.getElementById("imageOutput").src = imageData.data[0].url;
+
+                // 3. GENERATE AUDIO (Using OpenAI TTS)
+                const audioRes = await fetch("https://api.openai.com/v1/audio/speech", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "tts-1",
+                        voice: "onyx", // Male voice. Options: alloy, echo, fable, onyx, nova, shimmer
+                        input: storyText
+                    })
+                });
                 
-                // Placeholder image from internet
-                document.getElementById("imageOutput").src = "https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+                if(!audioRes.ok) throw new Error("Audio generation failed");
                 
-            }, 2500); // 2.5 seconds ka fake loading time
+                // Convert audio response to playable blob URL
+                const audioBlob = await audioRes.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                document.getElementById("audioOutput").src = audioUrl;
+
+                // Show all outputs
+                outputArea.style.display = "block";
+
+            } catch (error) {
+                console.error(error);
+                errorMsg.innerText = "Error: " + error.message;
+                errorMsg.style.display = "block";
+            } finally {
+                btn.disabled = false;
+                loading.style.display = "none";
+            }
         }
     </script>
-
 </body>
 </html>
